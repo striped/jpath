@@ -1,0 +1,9 @@
+org.kot.tools.pickup.adapter.BooleanAdapter
+org.kot.tools.pickup.adapter.ByteAdapter
+org.kot.tools.pickup.adapter.ShortAdapter
+org.kot.tools.pickup.adapter.IntegerAdapter
+org.kot.tools.pickup.adapter.LongAdapter
+org.kot.tools.pickup.adapter.FloatAdapter
+org.kot.tools.pickup.adapter.DoubleAdapter
+org.kot.tools.pickup.adapter.StringAdapter
+org.kot.tools.pickup.adapter.DateAdapter

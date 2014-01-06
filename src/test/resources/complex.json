@@ -1,0 +1,29 @@
+{
+	"root": 1,
+	"obj1":
+	{
+		"obj11":
+		{
+			"value": "value11"
+		},
+		"simple12": "value12",
+		"obj13":
+		{
+			"simple131": "value131"
+		}
+	},
+	"obj2":
+	{
+		"simple21": "value21",
+		"obj22":
+		{
+			"value": "value221"
+		}
+	},
+	"obj3": [
+		{"value": "value31"},
+		{"value": "value32"}
+	],
+	"obj4": ["value41", "value42"],
+	"obj5": [51, 52]
+}
