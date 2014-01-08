@@ -1,0 +1,29 @@
+{
+	"root": ${num},
+	"obj1":
+	{
+		"obj11":
+		{
+			"value": "value11-${num}"
+		},
+		"simple12": "value12-${num}",
+		"obj13":
+		{
+			"simple131": "value13-${num}"
+		}
+	},
+	"obj2":
+	{
+		"simple21": "value21-${num}",
+		"obj22":
+		{
+			"value": "value22-${num}"
+		}
+	},
+	"obj3": [
+		{"value": "value31-${num}"},
+		{"value": "value32-${num}"}
+	],
+	"obj4": ["value41-${num}", "value42-${num}"],
+	"obj5": [${num}, -${num}]
+}

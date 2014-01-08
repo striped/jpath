@@ -2,8 +2,10 @@ package org.kot.tools.pickup.reflective;
 
 import org.kot.tools.pickup.Binder;
 import org.kot.tools.pickup.Branch;
+import org.kot.tools.pickup.CollectionBinder;
 import org.kot.tools.pickup.JPath;
 import org.kot.tools.pickup.ObjectBinder;
+import org.kot.tools.pickup.ObjectBuilder;
 import org.kot.tools.pickup.adapter.Adapter;
 
 import java.lang.reflect.Field;
@@ -44,10 +46,13 @@ public class AnnotatedTypeBinder<T> implements ObjectBinder<T> {
 
 	@Override
 	@SuppressWarnings("unchecked")
-	public <O> ObjectBinder<O> lookupContainer(final Branch path) {
+	public <O> ObjectBuilder<O> lookupContainer(final Branch path) {
 		final Binder<?> field = children.get(path);
+		if (field instanceof CollectionBinder) {
+			return new ObjectBuilder.CollectionBuilder<O>((ObjectBinder<O>) field);
+		}
 		if (field instanceof ObjectBinder) {
-			return (ObjectBinder<O>) field;
+			return new ObjectBuilder<O>((ObjectBinder<O>) field);
 		}
 		return null;
 	}

@@ -3,6 +3,7 @@ package org.kot.tools.pickup.json;
 import net.minidev.json.parser.ParseException;
 import org.junit.BeforeClass;
 import org.junit.Test;
+import org.kot.tools.pickup.reflective.AnnotatedTypeBinder;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -14,7 +15,7 @@ import static org.hamcrest.Matchers.hasSize;
 import static org.hamcrest.Matchers.notNullValue;
 import static org.junit.Assert.assertThat;
 
-public class JSONPickerTest {
+public class JSONBinderTest {
 
 	private static ComplexObject object;
 
@@ -22,9 +23,10 @@ public class JSONPickerTest {
 	public static void parse() throws ParseException, IOException {
 		final InputStream stream = Thread.currentThread().getContextClassLoader().getResourceAsStream("complex.json");
 		try {
-			final JSONPicker<ComplexObject> pickUp = new JSONPicker<ComplexObject>(ComplexObject.class);
-			object = pickUp.pickUp(new InputStreamReader(stream));
-		} catch (ParseException e) {
+			final AnnotatedTypeBinder<ComplexObject> meta = new AnnotatedTypeBinder<ComplexObject>(ComplexObject.class);
+			final JSONBinder<ComplexObject> binder = new JSONBinder<ComplexObject>(meta);
+			object = binder.pickUp(new InputStreamReader(stream));
+		} finally {
 			stream.close();
 		}
 		assertThat(object, notNullValue());
@@ -32,7 +34,7 @@ public class JSONPickerTest {
 
 	@Test
 	public void testPrimitiveValueAtRoot() throws ParseException {
-		assertThat(object.getRoot(), notNullValue());
+		assertThat(object.getRoot(), greaterThan(0));
 	}
 
 	@Test

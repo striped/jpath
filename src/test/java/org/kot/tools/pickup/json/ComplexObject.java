@@ -13,7 +13,7 @@ import java.util.List;
 public class ComplexObject {
 
 	@JPath("root")
-	private String root;
+	private int root;
 
 	@JPath("obj1/obj13/simple131")
 	private String value;
@@ -30,7 +30,7 @@ public class ComplexObject {
 	@JPath("obj5")
 	private int[] ints;
 
-	public String getRoot() {
+	public int getRoot() {
 		return root;
 	}
 

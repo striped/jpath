@@ -8,7 +8,7 @@ package org.kot.tools.pickup;
  */
 public interface ObjectBinder<T> {
 
-	<O> ObjectBinder<O> lookupContainer(Branch path);
+	<O> ObjectBuilder<O> lookupContainer(Branch path);
 
 	void bindSimple(Branch path, final T instance, final String value);
 

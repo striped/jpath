@@ -1,5 +1,6 @@
 package org.kot.tools.pickup;
 
+import java.util.ArrayList;
 import java.util.Deque;
 import java.util.LinkedList;
 
@@ -24,6 +25,10 @@ public class MutableBranch extends Branch {
 		final String result = nodes().pop();
 		hash = nodes().hashCode();
 		return result;
+	}
+
+	public Branch freeze() {
+		return new Branch(new ArrayList<String>(nodes));
 	}
 
 	@SuppressWarnings("unchecked")

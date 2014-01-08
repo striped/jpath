@@ -4,6 +4,7 @@ import org.kot.tools.pickup.Binder;
 import org.kot.tools.pickup.Branch;
 import org.kot.tools.pickup.CollectionBinder;
 import org.kot.tools.pickup.ObjectBinder;
+import org.kot.tools.pickup.ObjectBuilder;
 import org.kot.tools.pickup.adapter.Adapter;
 
 import java.lang.reflect.Array;
@@ -39,14 +40,16 @@ class ListTypeBinder<E> implements Binder<List<E>>, CollectionBinder<E> {
 		adapter = Adapters.getFor(elementType);
 		if (null == adapter) {
 			complexElementBinder = new POJOElementTypeBinder<E>(elementType);
+		} else if (elementType.isArray() || List.class.isAssignableFrom(elementType)) {
+			throw new UnsupportedOperationException("array of array");
 		}
 
 	}
 
 	@SuppressWarnings("unchecked")
 	@Override
-	public <O> ObjectBinder<O> lookupContainer(final Branch path) {
-		return (ObjectBinder<O>) complexElementBinder;
+	public <O> ObjectBuilder<O> lookupContainer(final Branch path) {
+		return new ObjectBuilder<O>((ObjectBinder<O>) complexElementBinder);
 	}
 
 	@Override

@@ -2,6 +2,7 @@ package org.kot.tools.pickup.json;
 
 import net.minidev.json.parser.JSONEventReader;
 import net.minidev.json.parser.ParseException;
+import org.kot.tools.pickup.ObjectBinder;
 import org.kot.tools.pickup.reflective.AnnotatedTypeBinder;
 import org.kot.tools.pickup.ObjectBuilder;
 
@@ -13,20 +14,22 @@ import java.io.Reader;
  * @todo Add JavaDoc
  * @created 02/12/2013 21:07
  */
-public class JSONPicker<T> {
+public class JSONBinder<T> {
 
 	private final JSONEventReader parser;
 
-	private final AnnotatedTypeBinder<T> binder;
+	private ObjectBuilder<T> mapper;
 
-	public JSONPicker(final Class<T> clazz) {
-		parser = new JSONEventReader();
-		binder = new AnnotatedTypeBinder<T>(clazz);
+	private ContentHandlerDelegate handler;
+
+	public JSONBinder(final ObjectBinder<T> binder) {
+		this.parser = new JSONEventReader();
+		this.mapper = new ObjectBuilder<T>(binder);
+		this.handler = new ContentHandlerDelegate(mapper);
 	}
 
 	public T pickUp(final Reader reader) throws ParseException {
-		final ObjectBuilder<T> mapper = new ObjectBuilder<T>(binder);
-		parser.parse(reader, new ContentHandlerDelegate(mapper));
+		parser.parse(reader, handler);
 		return mapper.getInstance();
 	}
 }

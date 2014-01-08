@@ -5,6 +5,7 @@ import org.junit.Test;
 import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.greaterThan;
 import static org.hamcrest.Matchers.is;
+import static org.hamcrest.Matchers.not;
 import static org.junit.Assert.assertThat;
 
 /**
@@ -49,5 +50,21 @@ public class BranchTest {
 		assertThat(path.hashCode(), greaterThan(1));
 		path.pop();
 		assertThat(path.hashCode(), is(1));
+	}
+
+	@Test
+	public void testFreezing() {
+		final MutableBranch path = new MutableBranch();
+		path.push("a");
+		path.push("b");
+		final Branch frozen = path.freeze();
+		assertThat(path, equalTo(frozen));
+		path.pop();
+		assertThat(path, not(equalTo(frozen)));
+		path.pop();
+		assertThat(path, not(equalTo(frozen)));
+		path.push("a");
+		path.push("b");
+		assertThat(path, equalTo(frozen));
 	}
 }

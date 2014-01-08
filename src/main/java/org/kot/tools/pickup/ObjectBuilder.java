@@ -1,5 +1,8 @@
 package org.kot.tools.pickup;
 
+import java.util.HashMap;
+import java.util.Map;
+
 /**
 * Description.
 * @author <a href=mailto:striped@gmail.com>striped</a>
@@ -12,6 +15,8 @@ public class ObjectBuilder<T> {
 
 	protected final ObjectBinder<T> binder;
 
+	protected final Map<Branch, ObjectBuilder<?>> cache;
+
 	protected ObjectBuilder<?> parent;
 
 	protected T instance;
@@ -19,6 +24,7 @@ public class ObjectBuilder<T> {
 	public ObjectBuilder(ObjectBinder<T> binder) {
 		this.ctx = new MutableBranch();
 		this.binder = binder;
+		this.cache = new HashMap<Branch, ObjectBuilder<?>>();
 	}
 
 	public ObjectBuilder<?> startObject() {
@@ -31,14 +37,17 @@ public class ObjectBuilder<T> {
 	public ObjectBuilder<?> startEntry(final String key) {
 		ctx.push(key);
 
-		final ObjectBinder<T> candidate = binder.lookupContainer(ctx);
+		if (cache.containsKey(ctx)) {
+			return cache.get(ctx);
+		}
+		final ObjectBuilder<?> candidate = binder.lookupContainer(ctx);
 		if (null == candidate) {
 			return this;
 		}
-		final ObjectBuilder<?> next
-				= (candidate instanceof CollectionBinder)? new CollectionBuilder<T>(candidate): new ObjectBuilder<T>(candidate);
-		next.parent = this;
-		return next;
+		candidate.parent = this;
+
+		cache.put(ctx.freeze(), candidate);
+		return candidate;
 	}
 
 	public void bind(final String value) {
@@ -67,7 +76,7 @@ public class ObjectBuilder<T> {
 		return instance;
 	}
 
-	static class CollectionBuilder<E> extends ObjectBuilder<E> {
+	public static class CollectionBuilder<E> extends ObjectBuilder<E> {
 
 		private int idx;
 
