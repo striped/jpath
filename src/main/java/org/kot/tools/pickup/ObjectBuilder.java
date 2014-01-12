@@ -13,7 +13,7 @@ public class ObjectBuilder<T> {
 
 	protected final MutableBranch ctx;
 
-	protected final ObjectMeta<T> meta;
+	protected final ObjectTypeMeta<T> meta;
 
 	protected final Map<Branch, ObjectBuilder<?>> cache;
 
@@ -21,7 +21,7 @@ public class ObjectBuilder<T> {
 
 	protected T instance;
 
-	public ObjectBuilder(ObjectMeta<T> meta) {
+	public ObjectBuilder(ObjectTypeMeta<T> meta) {
 		this.ctx = new MutableBranch();
 		this.meta = meta;
 		this.cache = new HashMap<Branch, ObjectBuilder<?>>();
@@ -80,7 +80,7 @@ public class ObjectBuilder<T> {
 
 		private int idx;
 
-		public CollectionBuilder(final ObjectMeta<E> binder) {
+		public CollectionBuilder(final ObjectTypeMeta<E> binder) {
 			super(binder);
 			idx = -1;
 		}

@@ -6,7 +6,7 @@ package org.kot.tools.pickup;
  * @todo Add JavaDoc
  * @created 30/12/2013 12:10
  */
-public interface ObjectMeta<T> {
+public interface ObjectTypeMeta<T> {
 
 	<O> ObjectBuilder<O> lookupContainer(Branch path);
 

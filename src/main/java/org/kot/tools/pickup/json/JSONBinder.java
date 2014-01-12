@@ -2,7 +2,7 @@ package org.kot.tools.pickup.json;
 
 import net.minidev.json.parser.JSONEventReader;
 import net.minidev.json.parser.ParseException;
-import org.kot.tools.pickup.ObjectMeta;
+import org.kot.tools.pickup.ObjectTypeMeta;
 import org.kot.tools.pickup.ObjectBuilder;
 
 import java.io.Reader;
@@ -21,7 +21,7 @@ public class JSONBinder<T> {
 
 	private ContentHandlerDelegate handler;
 
-	public JSONBinder(final ObjectMeta<T> binder) {
+	public JSONBinder(final ObjectTypeMeta<T> binder) {
 		this.parser = new JSONEventReader();
 		this.mapper = new ObjectBuilder<T>(binder);
 		this.handler = new ContentHandlerDelegate(mapper);

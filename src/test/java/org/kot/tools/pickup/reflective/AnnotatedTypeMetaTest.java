@@ -1,7 +1,7 @@
 package org.kot.tools.pickup.reflective;
 
 import org.junit.Test;
-import org.kot.tools.pickup.ObjectMeta;
+import org.kot.tools.pickup.ObjectTypeMeta;
 import org.kot.tools.pickup.json.ComplexObject;
 
 /**
@@ -14,7 +14,7 @@ public class AnnotatedTypeMetaTest {
 
 	@Test
 	public void test() {
-		final ObjectMeta binder = new AnnotatedTypeMeta<ComplexObject>(ComplexObject.class);
+		final ObjectTypeMeta binder = new AnnotatedTypeMeta<ComplexObject>(ComplexObject.class);
 
 	}
 

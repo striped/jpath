@@ -3,11 +3,10 @@ package org.kot.tools.pickup.reflective;
 import org.kot.tools.pickup.Binder;
 import org.kot.tools.pickup.Branch;
 import org.kot.tools.pickup.CollectionTypeMeta;
-import org.kot.tools.pickup.ObjectMeta;
+import org.kot.tools.pickup.ObjectTypeMeta;
 import org.kot.tools.pickup.ObjectBuilder;
 import org.kot.tools.pickup.adapter.Adapter;
 
-import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
@@ -22,7 +21,7 @@ class ListTypeMeta<E> implements CollectionTypeMeta<E> {
 
 	private Binder<Collection<E>> binder;
 
-	private ObjectMeta<E> elementMeta;
+	private ObjectTypeMeta<E> elementMeta;
 
 	private final Adapter<E> primitiveAdapter;
 
@@ -41,7 +40,7 @@ class ListTypeMeta<E> implements CollectionTypeMeta<E> {
 	@SuppressWarnings("unchecked")
 	@Override
 	public <O> ObjectBuilder<O> lookupContainer(final Branch path) {
-		return new ObjectBuilder<O>((ObjectMeta<O>) elementMeta);
+		return new ObjectBuilder<O>((ObjectTypeMeta<O>) elementMeta);
 	}
 
 	@Override

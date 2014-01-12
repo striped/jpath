@@ -4,7 +4,7 @@ import org.kot.tools.pickup.Binder;
 import org.kot.tools.pickup.Branch;
 import org.kot.tools.pickup.CollectionTypeMeta;
 import org.kot.tools.pickup.JPath;
-import org.kot.tools.pickup.ObjectMeta;
+import org.kot.tools.pickup.ObjectTypeMeta;
 import org.kot.tools.pickup.ObjectBuilder;
 import org.kot.tools.pickup.adapter.Adapter;
 
@@ -21,21 +21,21 @@ import java.util.Map;
 * @todo Add JavaDoc
 * @created 29/11/2013 22:52
 */
-public class AnnotatedTypeMeta<T> implements ObjectMeta<T> {
+public class AnnotatedTypeMeta<T> implements ObjectTypeMeta<T> {
 
 	private final Class<?> clazz;
 
 	private Binder<T> binder;
 
 	private final Map<Branch, Binder<?>> children;
-	private final Map<Branch, ObjectMeta<?>> nested;
+	private final Map<Branch, ObjectTypeMeta<?>> nested;
 
 	@SuppressWarnings("unchecked")
 	public AnnotatedTypeMeta(Class<?> clazz) {
 		this.clazz = clazz;
 		binder = new NullBinder<T>();
 		children = new HashMap<Branch, Binder<?>>();
-		nested = new HashMap<Branch, ObjectMeta<?>>();
+		nested = new HashMap<Branch, ObjectTypeMeta<?>>();
 		final Iterator<Field> i = Utils.iterateFieldsOf(clazz, JPath.class);
 		while (i.hasNext()) {
 			Field f = i.next();
@@ -59,7 +59,7 @@ public class AnnotatedTypeMeta<T> implements ObjectMeta<T> {
 	@Override
 	@SuppressWarnings("unchecked")
 	public <O> ObjectBuilder<O> lookupContainer(final Branch path) {
-		final ObjectMeta<O> field = (ObjectMeta<O>) nested.get(path);
+		final ObjectTypeMeta<O> field = (ObjectTypeMeta<O>) nested.get(path);
 		if (field instanceof CollectionTypeMeta) {
 			return new ObjectBuilder.CollectionBuilder<O>(field);
 		}
