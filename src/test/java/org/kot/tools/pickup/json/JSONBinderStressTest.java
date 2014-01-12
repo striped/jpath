@@ -5,7 +5,7 @@ import org.junit.BeforeClass;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.kot.tools.ConcurrentRunner;
-import org.kot.tools.pickup.reflective.AnnotatedTypeBinder;
+import org.kot.tools.pickup.reflective.AnnotatedTypeMeta;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -16,7 +16,6 @@ import java.util.Arrays;
 import java.util.regex.Pattern;
 
 import static org.hamcrest.Matchers.arrayWithSize;
-import static org.hamcrest.Matchers.greaterThan;
 import static org.hamcrest.Matchers.hasSize;
 import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.notNullValue;
@@ -37,7 +36,7 @@ public class JSONBinderStressTest {
 
 	private static final Pattern pattern = Pattern.compile("\\$\\{num\\}");
 
-	private static AnnotatedTypeBinder<ComplexObject> meta;
+	private static AnnotatedTypeMeta<ComplexObject> meta;
 
 	private static String data;
 
@@ -47,7 +46,7 @@ public class JSONBinderStressTest {
 
 	@BeforeClass
 	public static void read() throws ParseException, IOException {
-		meta = new AnnotatedTypeBinder<ComplexObject>(ComplexObject.class);
+		meta = new AnnotatedTypeMeta<ComplexObject>(ComplexObject.class);
 
 		CharBuffer buf = CharBuffer.allocate(512);
 		StringBuilder out = new StringBuilder();

@@ -1,9 +1,8 @@
 package org.kot.tools.pickup.reflective;
 
 import org.junit.Test;
-import org.kot.tools.pickup.ObjectBinder;
+import org.kot.tools.pickup.ObjectMeta;
 import org.kot.tools.pickup.json.ComplexObject;
-import org.kot.tools.pickup.reflective.AnnotatedTypeBinder;
 
 /**
  * Description.
@@ -11,11 +10,11 @@ import org.kot.tools.pickup.reflective.AnnotatedTypeBinder;
  * @todo Add JavaDoc
  * @created 16/12/2013 22:06
  */
-public class AnnotatedTypeBinderTest {
+public class AnnotatedTypeMetaTest {
 
 	@Test
 	public void test() {
-		final ObjectBinder binder = new AnnotatedTypeBinder<ComplexObject>(ComplexObject.class);
+		final ObjectMeta binder = new AnnotatedTypeMeta<ComplexObject>(ComplexObject.class);
 
 	}
 

@@ -8,6 +8,6 @@ import java.util.Collection;
  * @todo Add JavaDoc
  * @created 05/01/2014 20:41
  */
-public interface CollectionBinder<E> extends ObjectBinder<Collection<E>> {
+public interface CollectionTypeMeta<E> extends ObjectMeta<Collection<E>> {
 
 }

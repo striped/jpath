@@ -3,7 +3,7 @@ package org.kot.tools.pickup.json;
 import net.minidev.json.parser.ParseException;
 import org.junit.BeforeClass;
 import org.junit.Test;
-import org.kot.tools.pickup.reflective.AnnotatedTypeBinder;
+import org.kot.tools.pickup.reflective.AnnotatedTypeMeta;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -23,7 +23,7 @@ public class JSONBinderTest {
 	public static void parse() throws ParseException, IOException {
 		final InputStream stream = Thread.currentThread().getContextClassLoader().getResourceAsStream("complex.json");
 		try {
-			final AnnotatedTypeBinder<ComplexObject> meta = new AnnotatedTypeBinder<ComplexObject>(ComplexObject.class);
+			final AnnotatedTypeMeta<ComplexObject> meta = new AnnotatedTypeMeta<ComplexObject>(ComplexObject.class);
 			final JSONBinder<ComplexObject> binder = new JSONBinder<ComplexObject>(meta);
 			object = binder.pickUp(new InputStreamReader(stream));
 		} finally {

@@ -8,13 +8,9 @@ import java.util.List;
 * Description.
 * @author <a href=mailto:striped@gmail.com>striped</a>
 * @todo Add JavaDoc
-* @created 04/01/2014 14:36
+* @created 12/01/2014 22:05
 */
-class POJOElementTypeBinder<E> extends AnnotatedTypeBinder<E> implements Binder<E> {
-
-	public POJOElementTypeBinder(final Class<?> clazz) {
-		super(clazz);
-	}
+class ListElementBinder<E> implements Binder<E> {
 
 	@SuppressWarnings("unchecked")
 	@Override

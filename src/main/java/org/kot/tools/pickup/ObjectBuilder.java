@@ -13,7 +13,7 @@ public class ObjectBuilder<T> {
 
 	protected final MutableBranch ctx;
 
-	protected final ObjectBinder<T> binder;
+	protected final ObjectMeta<T> meta;
 
 	protected final Map<Branch, ObjectBuilder<?>> cache;
 
@@ -21,15 +21,15 @@ public class ObjectBuilder<T> {
 
 	protected T instance;
 
-	public ObjectBuilder(ObjectBinder<T> binder) {
+	public ObjectBuilder(ObjectMeta<T> meta) {
 		this.ctx = new MutableBranch();
-		this.binder = binder;
+		this.meta = meta;
 		this.cache = new HashMap<Branch, ObjectBuilder<?>>();
 	}
 
 	public ObjectBuilder<?> startObject() {
 		if (ctx.isRoot()) {
-			instance = binder.newInstance();
+			instance = meta.newInstance();
 		}
 		return this;
 	}
@@ -40,7 +40,7 @@ public class ObjectBuilder<T> {
 		if (cache.containsKey(ctx)) {
 			return cache.get(ctx);
 		}
-		final ObjectBuilder<?> candidate = binder.lookupContainer(ctx);
+		final ObjectBuilder<?> candidate = meta.lookupContainer(ctx);
 		if (null == candidate) {
 			return this;
 		}
@@ -51,17 +51,17 @@ public class ObjectBuilder<T> {
 	}
 
 	public void bind(final String value) {
-		binder.bindSimple(ctx, instance, value);
+		meta.bindSimple(ctx, instance, value);
 	}
 
 	public void endEntry() {
 		ctx.pop();
 	}
 
-	@SuppressWarnings("unchecked")
 	public ObjectBuilder<?> endObject() {
-		if (ctx.isRoot() && binder instanceof Binder) {
-			((Binder<T>) binder).bind(parent.getInstance(), instance);
+		if (ctx.isRoot() && null != parent) {
+			final Binder<T> binder = meta.binderToParent();
+			binder.bind(parent.getInstance(), instance);
 			return parent;
 		}
 		return this;
@@ -80,7 +80,7 @@ public class ObjectBuilder<T> {
 
 		private int idx;
 
-		public CollectionBuilder(final ObjectBinder<E> binder) {
+		public CollectionBuilder(final ObjectMeta<E> binder) {
 			super(binder);
 			idx = -1;
 		}
@@ -90,7 +90,7 @@ public class ObjectBuilder<T> {
 		public ObjectBuilder<E> startObject() {
 			idx++;
 			if (0 == idx) {
-				instance = binder.newInstance();
+				instance = meta.newInstance();
 				return this;
 			}
 			final ObjectBuilder<E> result = (ObjectBuilder<E>) super.startEntry("[" + idx + "]");
@@ -102,15 +102,15 @@ public class ObjectBuilder<T> {
 		@Override
 		public void bind(final String value) {
 			ctx.push("[" + idx + "]");
-			binder.bindSimple(ctx, instance, value);
+			meta.bindSimple(ctx, instance, value);
 			ctx.pop();
 		}
 
 		@SuppressWarnings("unchecked")
 		@Override
 		public ObjectBuilder<?> endObject() {
-			if (ctx.isRoot() && binder instanceof Binder) {
-				((Binder<E>) binder).bind(parent.getInstance(), instance);
+			if (ctx.isRoot() && null != parent) {
+				meta.binderToParent().bind(parent.getInstance(), instance);
 				idx = -1;
 				return parent;
 			}
