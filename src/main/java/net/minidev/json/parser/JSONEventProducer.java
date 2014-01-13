@@ -6,11 +6,14 @@ import java.io.Reader;
 import static net.minidev.json.parser.ParseException.ERROR_UNEXPECTED_CHAR;
 import static net.minidev.json.parser.ParseException.ERROR_UNEXPECTED_TOKEN;
 
-public class JSONEventReader extends JSONParserReader {
+/**
+ * Temporary solution to get rid an unsolicited data type convertation while using "net.minidev:json-smart".
+ */
+public class JSONEventProducer extends JSONParserReader {
 
 	private static final FakeContainerFactory CONTAINER_FACTORY = new FakeContainerFactory();
 
-	public JSONEventReader() {
+	public JSONEventProducer() {
 		super(JSONParser.MODE_PERMISSIVE);
 	}
 

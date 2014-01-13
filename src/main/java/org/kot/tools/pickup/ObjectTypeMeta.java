@@ -6,13 +6,13 @@ package org.kot.tools.pickup;
  * @todo Add JavaDoc
  * @created 30/12/2013 12:10
  */
-public interface ObjectTypeMeta<T> {
+public interface ObjectTypeMeta<T> extends TypeMeta<T> {
 
-	<O> ObjectBuilder<O> lookupContainer(Branch path);
+	<O> ObjectBuilder<O> lookupFor(Branch path);
 
 	void bindSimple(Branch path, final T instance, final String value);
 
 	T newInstance();
 
-	Binder<T> binderToParent();
+	Binder<T> binder();
 }

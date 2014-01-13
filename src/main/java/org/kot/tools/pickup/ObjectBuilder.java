@@ -40,7 +40,7 @@ public class ObjectBuilder<T> {
 		if (cache.containsKey(ctx)) {
 			return cache.get(ctx);
 		}
-		final ObjectBuilder<?> candidate = meta.lookupContainer(ctx);
+		final ObjectBuilder<?> candidate = meta.lookupFor(ctx);
 		if (null == candidate) {
 			return this;
 		}
@@ -60,7 +60,7 @@ public class ObjectBuilder<T> {
 
 	public ObjectBuilder<?> endObject() {
 		if (ctx.isRoot() && null != parent) {
-			final Binder<T> binder = meta.binderToParent();
+			final Binder<T> binder = meta.binder();
 			binder.bind(parent.getInstance(), instance);
 			return parent;
 		}
@@ -69,53 +69,16 @@ public class ObjectBuilder<T> {
 
 	@Override
 	public String toString() {
-		return ctx.toString();
+		final StringBuilder result = new StringBuilder();
+		if (null != parent) {
+			result.append(parent);
+		}
+		result.append(ctx);
+		return result.toString();
 	}
 
 	public T getInstance() {
 		return instance;
-	}
-
-	public static class CollectionBuilder<E> extends ObjectBuilder<E> {
-
-		private int idx;
-
-		public CollectionBuilder(final ObjectTypeMeta<E> binder) {
-			super(binder);
-			idx = -1;
-		}
-
-		@SuppressWarnings("unchecked")
-		@Override
-		public ObjectBuilder<E> startObject() {
-			idx++;
-			if (0 == idx) {
-				instance = meta.newInstance();
-				return this;
-			}
-			final ObjectBuilder<E> result = (ObjectBuilder<E>) super.startEntry("[" + idx + "]");
-			ctx.pop();
-			result.startObject();
-			return result;
-		}
-
-		@Override
-		public void bind(final String value) {
-			ctx.push("[" + idx + "]");
-			meta.bindSimple(ctx, instance, value);
-			ctx.pop();
-		}
-
-		@SuppressWarnings("unchecked")
-		@Override
-		public ObjectBuilder<?> endObject() {
-			if (ctx.isRoot() && null != parent) {
-				meta.binderToParent().bind(parent.getInstance(), instance);
-				idx = -1;
-				return parent;
-			}
-			return this;
-		}
 	}
 
 }

@@ -2,10 +2,12 @@ package org.kot.tools.pickup.reflective;
 
 import org.kot.tools.pickup.Binder;
 import org.kot.tools.pickup.Branch;
+import org.kot.tools.pickup.CollectionBuilder;
 import org.kot.tools.pickup.CollectionTypeMeta;
 import org.kot.tools.pickup.JPath;
 import org.kot.tools.pickup.ObjectTypeMeta;
 import org.kot.tools.pickup.ObjectBuilder;
+import org.kot.tools.pickup.TypeMeta;
 import org.kot.tools.pickup.adapter.Adapter;
 
 import java.lang.reflect.Field;
@@ -27,44 +29,43 @@ public class AnnotatedTypeMeta<T> implements ObjectTypeMeta<T> {
 
 	private Binder<T> binder;
 
-	private final Map<Branch, Binder<?>> children;
-	private final Map<Branch, ObjectTypeMeta<?>> nested;
+	private final Map<Branch, TypeMeta<?>> children;
 
 	@SuppressWarnings("unchecked")
 	public AnnotatedTypeMeta(Class<?> clazz) {
 		this.clazz = clazz;
 		binder = new NullBinder<T>();
-		children = new HashMap<Branch, Binder<?>>();
-		nested = new HashMap<Branch, ObjectTypeMeta<?>>();
+		children = new HashMap<Branch, TypeMeta<?>>();
+		// check fields
 		final Iterator<Field> i = Utils.iterateFieldsOf(clazz, JPath.class);
 		while (i.hasNext()) {
 			Field f = i.next();
 			final Branch path = Branch.from(f.getAnnotation(JPath.class).value());
 			final Adapter<?> adapter = Adapters.getFor(f.getType());
+			TypeMeta<?> meta;
 			if (null != adapter) {
-				children.put(path, new PrimitiveBinder(f, adapter));
+				children.put(path, meta = new PrimitiveMeta(adapter));
 			} else if (f.getType().isArray() || List.class.isAssignableFrom(f.getType())) {
 				final Class<?> elementType = Utils.lookupElementType(f);
-				final ListTypeMeta meta = new ListTypeMeta(elementType);
-				meta.setBinder((f.getType().isArray())? new ArrayFieldBinder(f): new FieldBinder<Collection>(f));
-				nested.put(path, meta);
+				meta = new ListTypeMeta(elementType);
+				children.put(path, meta);
 			} else {
-				final AnnotatedTypeMeta<?> meta = new AnnotatedTypeMeta(f.getType());
-				meta.setBinder(new FieldBinder(f));
-				nested.put(path, meta);
+				meta = new AnnotatedTypeMeta(f.getType());
+				children.put(path, meta);
 			}
+			meta.setBinder((f.getType().isArray())? new ArrayFieldBinder(f): new FieldBinder<Collection>(f));
 		}
 	}
 
 	@Override
 	@SuppressWarnings("unchecked")
-	public <O> ObjectBuilder<O> lookupContainer(final Branch path) {
-		final ObjectTypeMeta<O> field = (ObjectTypeMeta<O>) nested.get(path);
-		if (field instanceof CollectionTypeMeta) {
-			return new ObjectBuilder.CollectionBuilder<O>(field);
+	public <O> ObjectBuilder<O> lookupFor(final Branch path) {
+		final TypeMeta<O> meta = (TypeMeta<O>) children.get(path);
+		if (meta instanceof CollectionTypeMeta) {
+			return new CollectionBuilder((CollectionTypeMeta) meta);
 		}
-		if (field != null) {
-			return new ObjectBuilder<O>(field);
+		if (meta instanceof ObjectTypeMeta) {
+			return new ObjectBuilder<O>((ObjectTypeMeta) meta);
 		}
 		return null;
 	}
@@ -89,12 +90,11 @@ public class AnnotatedTypeMeta<T> implements ObjectTypeMeta<T> {
 	}
 
 	@Override
-	public Binder<T> binderToParent() {
+	public Binder<T> binder() {
 		return binder;
 	}
 
-	public AnnotatedTypeMeta<T> setBinder(final Binder<T> binder) {
+	public void setBinder(final Binder<T> binder) {
 		this.binder = binder;
-		return this;
 	}
 }
