@@ -7,9 +7,10 @@ import org.kot.tools.pickup.ObjectBuilder;
 import java.io.IOException;
 
 /**
- * Description.
+ * JSON content event handler.
+ * <p/>
+ * Delegates events produced by JSON parser to current {@link org.kot.tools.pickup.ObjectBuilder builder}
  * @author <a href=mailto:striped@gmail.com>striped</a>
- * @todo Add JavaDoc
  * @created 02/12/2013 20:21
  */
 class ContentHandlerDelegate implements ContentHandler {
